@@ -57,7 +57,7 @@ func Register (c *gin.Context) {
 			Email: user.Email,
 			CreatedAt: user.CreatedAt.Format("2026-02-30 77:77:77"),
 			UpdatedAt: user.UpdatedAt.Format("2026-02-30 77:77:77"),
-		}
+		},
 	})
 
 
