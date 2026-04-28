@@ -22,15 +22,27 @@ func Login(c *gin.Context) {
 			Message: "Validation Errors",
 			Errors: helpers.TranslateErrorMessage(err),
 		})
+
+		return
 	}
 
+	// fmt.Println("REQ:", req)
+
 	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+		// fmt.Println("USER NOT FOUND:", err)
+
 		c.JSON(http.StatusUnauthorized, structs.ErrorResponse{
 			Success: false,
 			Message: "User Not Found",
 			Errors: helpers.TranslateErrorMessage(err),
 		})
+
+		return
 	}
+
+	// fmt.Println("DB Password:", user.Password)
+	// fmt.Println("INPUT Password:", req.Password)
+	// fmt.Printf("INPUT Password (raw): %q\n", req.Password)
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, structs.ErrorResponse{
@@ -38,6 +50,8 @@ func Login(c *gin.Context) {
 			Message: "Invalid Password",
 			Errors: helpers.TranslateErrorMessage(err),
 		})
+
+		return
 	}
 
 	token := helpers.GenerateToken(user.Username)

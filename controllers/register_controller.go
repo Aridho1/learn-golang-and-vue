@@ -23,6 +23,8 @@ func Register (c *gin.Context) {
 		return
 	}
 
+	// fmt.Printf("REGISTER PASSWORD (raw): %q\n", req.Password)
+
 	user := models.User{
 		Name:		req.Name,
 		Username:	req.Username,
@@ -55,8 +57,9 @@ func Register (c *gin.Context) {
 			Name: user.Name,
 			Username: user.Username,
 			Email: user.Email,
-			CreatedAt: user.CreatedAt.Format("2026-02-30 77:77:77"),
-			UpdatedAt: user.UpdatedAt.Format("2026-02-30 77:77:77"),
+			// CreatedAt: user.CreatedAt.Format("2026-02-30 77:77:77"),
+			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
 		},
 	})
 
