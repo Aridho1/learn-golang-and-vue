@@ -2,8 +2,8 @@ package main
 
 import (
 	"zunn/backend-api/config"
-	"zunn/backend-api/controllers/routes"
 	"zunn/backend-api/database"
+	"zunn/backend-api/routes"
 
 	"github.com/gin-gonic/gin"
 )
