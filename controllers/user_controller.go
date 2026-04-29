@@ -93,3 +93,56 @@ func FindUserById(c *gin.Context) {
 		},
 	})
 }
+
+func UpdateUser(c *gin.Context) {
+	id := c.Param("id")
+
+	var user models.User
+
+	if err := database.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, structs.ErrorResponse{
+			Success: false,
+			Message: "User Not Found",
+			Errors: helpers.TranslateErrorMessage(err),
+		})
+		return
+	}
+
+	var req = structs.UserUpdateRequest{}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, structs.ErrorResponse{
+			Success: false,
+			Message: "Validation  Errors",
+			Errors: helpers.TranslateErrorMessage(err),
+		})
+		return
+	}
+
+	user.Name = req.Name
+	user.Username = req.Username
+	user.Email = req.Email
+	user.Password = helpers.HashPassword(req.Password)
+
+	if err := database.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, structs.ErrorResponse{
+			Success: false,
+			Message: "Failed To Updated User",
+			Errors: helpers.TranslateErrorMessage(err),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, structs.SuccessResponse{
+		Success: true,
+		Message: "User Updated Successfully",
+		Data: structs.UserResponse{
+			Id: user.ID,
+			Name: user.Name,
+			Username: user.Username,
+			Email: user.Email,
+			CreatedAt: user.CreatedAt.Format("20060-01-02 15:04:05"),
+			UpdatedAt: user.UpdatedAt.Format("20060-01-02 15:04:05"),
+		},
+	})
+}
