@@ -64,3 +64,32 @@ func CreateUser(c *gin.Context) {
 	})
 	
 }
+
+func FindUserById(c *gin.Context) {
+
+	id := c.Param("id")
+
+	var user models.User
+
+	if err := database.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, structs.ErrorResponse{
+			Success: false,
+			Message: "User Not Found",
+			Errors: helpers.TranslateErrorMessage(err),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, structs.SuccessResponse{
+		Success: true,
+		Message: "User Found",
+		Data: structs.UserResponse{
+			Id: user.ID,
+			Name: user.Name,
+			Username: user.Username,
+			Email: user.Email,
+			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
+		},
+	})
+}
