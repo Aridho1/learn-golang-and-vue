@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"zunn/backend-api/database"
+	"zunn/backend-api/helpers"
 	"zunn/backend-api/models"
 	"zunn/backend-api/structs"
 
@@ -19,4 +20,47 @@ func FindUser(c *gin.Context) {
 		Message: 	"List Data Users",
 		Data:		users,
 	})
+}
+
+func CreateUser(c *gin.Context) {
+	var req = structs.UserCreateRequest{}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, structs.ErrorResponse{
+			Success: false,
+			Message: "Validation Errors",
+			Errors: helpers.TranslateErrorMessage(err),
+		})
+		return
+	}
+
+	user := models.User{
+		Name: req.Name,
+		Username: req.Username,
+		Email: req.Email,
+		Password: helpers.HashPassword(req.Password),
+	}
+
+	if err := database.DB.Create(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, structs.ErrorResponse{
+			Success: false,
+			Message: "Failed To Create User",
+			Errors: helpers.TranslateErrorMessage(err),
+		})
+		return
+	}
+	
+	c.JSON(http.StatusOK, structs.SuccessResponse{
+		Success: true,
+		Message: "User Created Successfully",
+		Data: structs.UserResponse{
+			Id: 		user.ID,
+			Name: 		user.Name,
+			Username: 	user.Username,
+			Email: 		user.Email,
+			CreatedAt: 	user.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt: 	user.UpdatedAt.Format("2006-01-02 15:04:05"),
+		},
+	})
+	
 }
