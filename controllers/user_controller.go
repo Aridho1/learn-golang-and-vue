@@ -10,6 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func validationErrors(c *gin.Context, err error) {
+	c.JSON(http.StatusUnprocessableEntity, structs.ErrorResponse{
+		Success: false,
+		Message: "Validation Errors",
+		Errors: helpers.TranslateErrorMessage(err),
+	})
+}
+
 func userNotFound(c *gin.Context, err error) {
 	c.JSON(http.StatusNotFound, structs.ErrorResponse{
 		Success: false,
@@ -42,11 +50,7 @@ func CreateUser(c *gin.Context) {
 	var req = structs.UserCreateRequest{}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, structs.ErrorResponse{
-			Success: false,
-			Message: "Validation Errors",
-			Errors: helpers.TranslateErrorMessage(err),
-		})
+		validationErrors(c, err)
 		return
 	}
 
@@ -58,11 +62,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	if err := database.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, structs.ErrorResponse{
-			Success: false,
-			Message: "Failed To Create User",
-			Errors: helpers.TranslateErrorMessage(err),
-		})
+		intervalServerError(c, "Failed To Create User", err)
 		return
 	}
 	
@@ -88,11 +88,7 @@ func FindUserById(c *gin.Context) {
 	var user models.User
 
 	if err := database.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, structs.ErrorResponse{
-			Success: false,
-			Message: "User Not Found",
-			Errors: helpers.TranslateErrorMessage(err),
-		})
+		userNotFound(c, err)
 		return
 	}
 
@@ -116,22 +112,14 @@ func UpdateUser(c *gin.Context) {
 	var user models.User
 
 	if err := database.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, structs.ErrorResponse{
-			Success: false,
-			Message: "User Not Found",
-			Errors: helpers.TranslateErrorMessage(err),
-		})
+		userNotFound(c, err)
 		return
 	}
 
 	var req = structs.UserUpdateRequest{}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, structs.ErrorResponse{
-			Success: false,
-			Message: "Validation  Errors",
-			Errors: helpers.TranslateErrorMessage(err),
-		})
+		validationErrors(c, err)
 		return
 	}
 
@@ -141,11 +129,7 @@ func UpdateUser(c *gin.Context) {
 	user.Password = helpers.HashPassword(req.Password)
 
 	if err := database.DB.Save(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, structs.ErrorResponse{
-			Success: false,
-			Message: "Failed To Updated User",
-			Errors: helpers.TranslateErrorMessage(err),
-		})
+		intervalServerError(c, "Failed To Update User", err)
 		return
 	}
 
