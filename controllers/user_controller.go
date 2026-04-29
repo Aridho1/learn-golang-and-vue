@@ -10,6 +10,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func userNotFound(c *gin.Context, err error) {
+	c.JSON(http.StatusNotFound, structs.ErrorResponse{
+		Success: false,
+		Message: "User Not Found",
+		Errors: helpers.TranslateErrorMessage(err),
+	})
+}
+
+func intervalServerError(c *gin.Context, message string, err error) {
+	c.JSON(http.StatusInternalServerError, structs.ErrorResponse{
+		Success: false,
+		Message: message,
+		Errors: helpers.TranslateErrorMessage(err),
+	})
+}
+
 func FindUser(c *gin.Context) {
 	var users []models.User
 
@@ -144,5 +160,27 @@ func UpdateUser(c *gin.Context) {
 			CreatedAt: user.CreatedAt.Format("20060-01-02 15:04:05"),
 			UpdatedAt: user.UpdatedAt.Format("20060-01-02 15:04:05"),
 		},
+	})
+}
+
+func RemoveUser(c *gin.Context) {
+
+	id := c.Param("id")
+
+	var user models.User
+
+	if err := database.DB.Find(&user, id).Error; err != nil {
+		userNotFound(c, err)
+		return
+	}
+
+	if err := database.DB.Delete(&user).Error; err != nil {
+		intervalServerError(c, "Failed To Remove User", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, structs.SuccessResponse{
+		Success: true,
+		Message: "User Removed Successfully",
 	})
 }
