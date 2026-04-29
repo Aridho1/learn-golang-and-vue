@@ -82,9 +82,7 @@ func CreateUser(c *gin.Context) {
 }
 
 func FindUserById(c *gin.Context) {
-
 	id := c.Param("id")
-
 	var user models.User
 
 	if err := database.DB.First(&user, id).Error; err != nil {
@@ -108,7 +106,6 @@ func FindUserById(c *gin.Context) {
 
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
-
 	var user models.User
 
 	if err := database.DB.First(&user, id).Error; err != nil {
@@ -148,9 +145,7 @@ func UpdateUser(c *gin.Context) {
 }
 
 func RemoveUser(c *gin.Context) {
-
 	id := c.Param("id")
-
 	var user models.User
 
 	if err := database.DB.Find(&user, id).Error; err != nil {
