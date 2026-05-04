@@ -70,8 +70,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Full Name</label>
                                     <input v-model="form.name" type="text" class="form-control" placeholder="Full Name" />
-                                    <div v-if="errors.name" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.name }}
+                                    <div v-if="errors?.name" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors?.name }}
                                     </div>
                                 </div>
                             </div>
@@ -79,8 +79,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Username</label>
                                     <input v-model="form.username" type="text" class="form-control" placeholder="Username" />
-                                    <div v-if="errors.username" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.username }}
+                                    <div v-if="errors?.username" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors?.username }}
                                     </div>
                                 </div>
                             </div>
@@ -91,8 +91,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Email address</label>
                                     <input v-model="form.email" type="email" class="form-control" placeholder="Email Address" />
-                                    <div v-if="errors.email" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.email }}
+                                    <div v-if="errors?.email" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors?.email }}
                                     </div>
                                 </div>
                             </div>
@@ -100,8 +100,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Password</label>
                                     <input v-model="form.password" type="password" class="form-control" placeholder="Password" />
-                                    <div v-if="errors.password" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.password }}
+                                    <div v-if="errors?.password" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors?.password }}
                                     </div>
                                 </div>
                             </div>

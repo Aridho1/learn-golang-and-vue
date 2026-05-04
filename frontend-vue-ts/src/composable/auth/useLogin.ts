@@ -1,5 +1,8 @@
 import { useMutation } from "@tanstack/vue-query";
 import Api from "../../services/api";
+import { ApiErrorResponse, ApiSuccessResponse } from "../../types/api";
+import { UserResponse } from "../../types/user";
+import { AxiosError } from "axios";
 
 interface LoginRequest {
     username: string;
@@ -7,11 +10,15 @@ interface LoginRequest {
 }
 
 export const useLogin = () => {
-    return useMutation({
+    return useMutation<ApiSuccessResponse<UserResponse>, AxiosError<ApiErrorResponse>, LoginRequest>({
         mutationFn: async (data: LoginRequest) => {
-            const response = await Api.post("/api/login", data);
+            try {
+                const response = await Api.post<ApiSuccessResponse<UserResponse>>("/api/login", data);
 
-            return response.data;
+                return response.data;
+            } catch (err) {
+                throw err;
+            }
         },
     });
 };

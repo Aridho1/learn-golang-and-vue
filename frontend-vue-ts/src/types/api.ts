@@ -1,3 +1,5 @@
+import { ValidationErrors } from "./validatioError";
+
 export interface ApiSuccessResponse<T> {
     success: boolean;
     message: string;
@@ -7,7 +9,8 @@ export interface ApiSuccessResponse<T> {
 export interface ApiErrorResponse {
     success: boolean;
     message: string;
-    errors: {
-        [key: string]: string;
-    };
+    // errors: {
+    //     [key: string]: string;
+    // };
+    errors: ValidationErrors;
 }
