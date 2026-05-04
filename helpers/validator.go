@@ -55,7 +55,7 @@ func TranslateErrorMessage(err error) map[string]string {
 				errorsMap["email"] = "Email already exists"
 			}
 		} else if err == gorm.ErrRecordNotFound {
-			errorsMap["Error"] = "Record not found"
+			errorsMap["error"] = "Record not found"
 		}
 	}
 
