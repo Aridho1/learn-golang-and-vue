@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useRegister } from "../../composable/auth/userRegister";
 
@@ -9,10 +9,12 @@ interface ValidationErrors {
 
 const router = useRouter();
 
-const name = ref<string>("");
-const username = ref<string>("");
-const email = ref<string>("");
-const password = ref<string>("");
+const form = reactive({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+});
 
 const errors = ref<ValidationErrors>({});
 
@@ -22,12 +24,7 @@ const handleRegister = (e: Event) => {
     e.preventDefault();
 
     mutate(
-        {
-            name: name.value,
-            username: username.value,
-            email: email.value,
-            password: password.value,
-        },
+        { ...form },
         {
             onSuccess: () => {
                 router.push("/login");
@@ -55,7 +52,7 @@ const handleRegister = (e: Event) => {
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Full Name</label>
-                                    <input v-model="name" type="text" class="form-control" placeholder="Full Name" />
+                                    <input v-model="form.name" type="text" class="form-control" placeholder="Full Name" />
                                     <div v-if="errors.Name" class="alert alert-danger mt-2 rounded-4">
                                         {{ errors.Name }}
                                     </div>
@@ -64,7 +61,7 @@ const handleRegister = (e: Event) => {
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Username</label>
-                                    <input v-model="username" type="text" class="form-control" placeholder="Username" />
+                                    <input v-model="form.username" type="text" class="form-control" placeholder="Username" />
                                     <div v-if="errors.Username" class="alert alert-danger mt-2 rounded-4">
                                         {{ errors.Username }}
                                     </div>
@@ -76,7 +73,7 @@ const handleRegister = (e: Event) => {
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Email address</label>
-                                    <input v-model="email" type="email" class="form-control" placeholder="Email Address" />
+                                    <input v-model="form.email" type="email" class="form-control" placeholder="Email Address" />
                                     <div v-if="errors.Email" class="alert alert-danger mt-2 rounded-4">
                                         {{ errors.Email }}
                                     </div>
@@ -85,7 +82,7 @@ const handleRegister = (e: Event) => {
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Password</label>
-                                    <input v-model="password" type="password" class="form-control" placeholder="Password" />
+                                    <input v-model="form.password" type="password" class="form-control" placeholder="Password" />
                                     <div v-if="errors.Password" class="alert alert-danger mt-2 rounded-4">
                                         {{ errors.Password }}
                                     </div>
