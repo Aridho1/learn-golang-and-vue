@@ -11,7 +11,12 @@ import (
 func TranslateErrorMessage(err error) map[string]string {
 	errorsMap := make(map[string]string)
 
+	fmt.Printf("\nerr: %+v\n", err)
+
 	if validationErrors, ok := err.(validator.ValidationErrors); ok {
+
+		fmt.Printf("\nvalidationErrors: %+v\n", validationErrors)
+		
 		for _, fieldError := range validationErrors {
 			field := fieldError.Field()
 
@@ -36,7 +41,11 @@ func TranslateErrorMessage(err error) map[string]string {
 
 	if err != nil {
 		_err := err.Error()
-		if strings.Contains(_err, "Duplicate Entry") {
+		lowerCaseErr := strings.ToLower(_err)
+
+		fmt.Printf("\n_err: %+v\n", _err)
+		
+		if strings.Contains(lowerCaseErr, "duplicate entry") {
 			if strings.Contains(_err, "username") {
 				errorsMap["username"] = "Username already exists"
 			} 
@@ -48,6 +57,8 @@ func TranslateErrorMessage(err error) map[string]string {
 			errorsMap["Error"] = "Record not found"
 		}
 	}
+
+	fmt.Printf("\nerrorsMap: %+v\n", errorsMap)
 
 	return errorsMap
 }
