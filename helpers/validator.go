@@ -18,7 +18,8 @@ func TranslateErrorMessage(err error) map[string]string {
 		// fmt.Printf("\nvalidationErrors: %+v\n", validationErrors)
 		
 		for _, fieldError := range validationErrors {
-			field := fieldError.Field()
+			// field := fieldError.Field()
+			field := strings.ToLower(fieldError.Field())
 
 			switch fieldError.Tag() {
 				case "required":
@@ -58,11 +59,11 @@ func TranslateErrorMessage(err error) map[string]string {
 		}
 	}
 
-	// fmt.Printf("\nerrorsMap: %+v\n", errorsMap)
+	fmt.Printf("\nerrorsMap: %+v\n", errorsMap)
 
 	return errorsMap
 }
 
 func IsDuplicateEntryError(err error) bool {
-	return err != nil && strings.Contains(err.Error(), "Duplicate Entry")
+	return err != nil && strings.Contains(strings.ToLower(err.Error()), "duplicate entry")
 }

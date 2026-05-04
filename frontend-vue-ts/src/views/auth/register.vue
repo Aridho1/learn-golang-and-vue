@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { useRegister } from "../../composable/auth/useRegister";
 import { ApiErrorResponse, ApiSuccessResponse } from "../../types/api";
 import { UserResponse } from "../../types/user";
+import { AxiosError } from "axios";
 
 interface ValidationErrors {
     [key: string]: string;
@@ -28,7 +29,7 @@ const handleRegister = (e: Event) => {
     mutate(
         { ...form },
         {
-            onSuccess: (data: ApiSuccessResponse<UserResponse> | ApiErrorResponse) => {
+            onSuccess: (data: ApiSuccessResponse<UserResponse>) => {
                 router.push("/login");
 
                 console.log("DATA:", data);
@@ -36,11 +37,21 @@ const handleRegister = (e: Event) => {
                 // console.log("token", data?.data.token);
                 // alert("Register Berhasil");
             },
-            onError: (error: any) => {
-                errors.value = error?.response?.data?.errors || {};
-                // console.error(error);
-                // Object.assign(errors, error?.response?.data?.errors || {});
+            // onError: (error: any) => {
+            // errors.value = error?.response?.data?.errors || {};
+            //     // console.error(error);
+            //     // Object.assign(errors, error?.response?.data?.errors || {});
+            // },
+
+            onError: (error: AxiosError<ApiErrorResponse>) => {
+                errors.value = error.response?.data.errors || {};
             },
+
+            // onError: (error: AxiosError<ApiErrorResponse>) => {
+            //     errors.value = error?.response?.data?.errors || {};
+            //     // console.error(error);
+            //     // Object.assign(errors, error?.response?.data?.errors || {});
+            // },
         },
     );
 };
@@ -59,8 +70,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Full Name</label>
                                     <input v-model="form.name" type="text" class="form-control" placeholder="Full Name" />
-                                    <div v-if="errors.Name" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.Name }}
+                                    <div v-if="errors.name" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors.name }}
                                     </div>
                                 </div>
                             </div>
@@ -68,8 +79,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Username</label>
                                     <input v-model="form.username" type="text" class="form-control" placeholder="Username" />
-                                    <div v-if="errors.Username" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.Username }}
+                                    <div v-if="errors.username" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors.username }}
                                     </div>
                                 </div>
                             </div>
@@ -80,8 +91,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Email address</label>
                                     <input v-model="form.email" type="email" class="form-control" placeholder="Email Address" />
-                                    <div v-if="errors.Email" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.Email }}
+                                    <div v-if="errors.email" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors.email }}
                                     </div>
                                 </div>
                             </div>
@@ -89,8 +100,8 @@ const handleRegister = (e: Event) => {
                                 <div class="form-group">
                                     <label class="mb-1 fw-bold">Password</label>
                                     <input v-model="form.password" type="password" class="form-control" placeholder="Password" />
-                                    <div v-if="errors.Password" class="alert alert-danger mt-2 rounded-4">
-                                        {{ errors.Password }}
+                                    <div v-if="errors.password" class="alert alert-danger mt-2 rounded-4">
+                                        {{ errors.password }}
                                     </div>
                                 </div>
                             </div>
