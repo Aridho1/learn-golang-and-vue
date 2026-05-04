@@ -2,6 +2,8 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useRegister } from "../../composable/auth/userRegister";
+import { ApiResponse } from "../../types/api";
+import { UserResponse } from "../../types/user";
 
 interface ValidationErrors {
     [key: string]: string;
@@ -26,8 +28,11 @@ const handleRegister = (e: Event) => {
     mutate(
         { ...form },
         {
-            onSuccess: () => {
+            onSuccess: (data: ApiResponse<UserResponse>) => {
                 router.push("/login");
+
+                console.log("DATA:", data);
+                console.log("token", data.data.token);
                 // alert("Register Berhasil");
             },
             onError: (error: any) => {
