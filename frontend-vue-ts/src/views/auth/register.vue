@@ -31,11 +31,12 @@ const handleRegister = (e: Event) => {
         {
             onSuccess: () => {
                 router.push("/login");
+                // alert("Register Berhasil");
             },
             onError: (error: any) => {
-                // errors.value = error?.response?.data?.errors || {};
+                errors.value = error?.response?.data?.errors || {};
                 // console.error(error);
-                Object.assign(errors, error?.response?.data?.errors || {});
+                // Object.assign(errors, error?.response?.data?.errors || {});
             },
         },
     );
