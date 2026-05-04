@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useRegister } from "../../composable/auth/userRegister";
-import { ApiResponse } from "../../types/api";
+import { useRegister } from "../../composable/auth/useRegister";
+import { ApiErrorResponse, ApiSuccessResponse } from "../../types/api";
 import { UserResponse } from "../../types/user";
 
 interface ValidationErrors {
@@ -28,11 +28,12 @@ const handleRegister = (e: Event) => {
     mutate(
         { ...form },
         {
-            onSuccess: (data: ApiResponse<UserResponse>) => {
+            onSuccess: (data: ApiSuccessResponse<UserResponse> | ApiErrorResponse) => {
                 router.push("/login");
 
                 console.log("DATA:", data);
-                console.log("token", data.data.token);
+                // console.log("token", data?.data)
+                // console.log("token", data?.data.token);
                 // alert("Register Berhasil");
             },
             onError: (error: any) => {

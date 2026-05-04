@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/vue-query";
 import Api from "../../services/api";
 
-import { ApiResponse } from "../../types/api";
+import { ApiErrorResponse, ApiSuccessResponse } from "../../types/api";
 import { UserResponse } from "../../types/user";
 
 interface RegisterRequest {
@@ -18,11 +18,11 @@ export const useRegister = () => {
                 // console.log("DATA:", data);
                 // console.log("JSON:", JSON.stringify(data));
 
-                const response = await Api.post<ApiResponse<UserResponse>>("/api/register", data);
+                const response = await Api.post<ApiSuccessResponse<UserResponse> | ApiErrorResponse>("/api/register", data);
 
                 // console.log("SUCCESS:", response);
 
-                return response.data;
+                return response.data as ApiSuccessResponse<UserResponse> | ApiErrorResponse;
             } catch (error) {
                 // console.log("ERROR:", error);
 
