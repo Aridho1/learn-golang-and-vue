@@ -2,14 +2,7 @@ import { useMutation } from "@tanstack/vue-query";
 import Cookies from "js-cookie";
 import Api from "../../services/api";
 import { ApiSuccessResponse } from "../../types/api";
-import { UserResponse } from "../../types/user";
-
-interface UserRequest {
-    name: string;
-    username: string;
-    password: string;
-    email: string;
-}
+import { UserRequest, UserResponse } from "../../types/user";
 
 export const useUserCreate = () => {
     return useMutation({
