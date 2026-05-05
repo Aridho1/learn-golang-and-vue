@@ -1,8 +1,24 @@
 <script setup lang="ts">
+import { useQueryClient } from "@tanstack/vue-query";
 import SidebarMenu from "../../../components/SidebarMenu.vue";
 import { useUser } from "../../../composable/user/useUser";
+import { useUserRemove } from "../../../composable/user/useUserRemove";
 
 const { data: users, isLoading, isError, error } = useUser();
+
+const queryClient = useQueryClient();
+
+const userRemove = useUserRemove();
+
+const handleRemove = (id: number) => {
+    if (!confirm("Are You Sure You Want To Remove This User?")) return;
+
+    userRemove.mutate(id, {
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+    });
+};
 </script>
 
 <template>
@@ -38,7 +54,7 @@ const { data: users, isLoading, isError, error } = useUser();
                                     <td>{{ user.email }}</td>
                                     <td class="text-center">
                                         <router-link :to="`/admin/users/edit/${user.id}`" class="btn btn-sm btn-primary rounded-4 shadow-sm border-0 me-2">EDIT</router-link>
-                                        <button class="btn btn-sm btn-danger rounded-4 shadow-sm border-0">REMOVE</button>
+                                        <button @click="handleRemove(user.id)" class="btn btn-sm btn-danger rounded-4 shadow-sm border-0">REMOVE</button>
                                     </td>
                                 </tr>
                             </tbody>
