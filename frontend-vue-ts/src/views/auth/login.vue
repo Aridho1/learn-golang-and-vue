@@ -44,7 +44,7 @@ const handleLogin = (e: Event) => {
                     }),
                 );
 
-                router.push("/dashboard");
+                router.push("/admin/dashboard");
             },
             onError: (err: AxiosError<ApiErrorResponse>) => {
                 console.log(err);
