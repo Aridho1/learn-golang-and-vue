@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/vue-query";
 import Cookies from "js-cookie";
-import { UserResponse } from "../../types/user";
 import Api from "../../services/api";
 import { ApiSuccessResponse } from "../../types/api";
+import { UserResponse } from "../../types/user";
 
 export const useUserById = (id: number) => {
     return useQuery<UserResponse, Error>({

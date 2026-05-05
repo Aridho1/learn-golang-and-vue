@@ -5,10 +5,17 @@ export interface User {
     email: string;
 }
 
-export interface UserRequest {
+export interface UserCreateRequest {
     name: string;
     username: string;
     password: string;
+    email: string;
+}
+
+export interface UserEditRequest {
+    name: string;
+    username: string;
+    password?: string;
     email: string;
 }
 

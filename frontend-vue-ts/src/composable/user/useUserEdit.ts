@@ -2,14 +2,14 @@ import { useMutation } from "@tanstack/vue-query";
 import Cookies from "js-cookie";
 import Api from "../../services/api";
 import { ApiSuccessResponse } from "../../types/api";
-import { UserResponse, UserCreateRequest } from "../../types/user";
+import { UserResponse, UserEditRequest } from "../../types/user";
 
-export const useUserCreate = () => {
+export const useUserEdit = () => {
     return useMutation({
-        mutationFn: async (request: UserCreateRequest) => {
+        mutationFn: async ({ id, request }: { id: number; request: UserEditRequest }) => {
             const token = Cookies.get("token");
 
-            const response = await Api.post<ApiSuccessResponse<UserResponse>>("/api/users", request, {
+            const response = await Api.put<ApiSuccessResponse<UserResponse>>(`/api/users/${id}`, request, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
