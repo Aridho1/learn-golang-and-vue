@@ -10,7 +10,7 @@ export const useUserById = (id: number) => {
         queryFn: async () => {
             const token = Cookies.get("token");
 
-            const response = await Api.get<ApiSuccessResponse<UserResponse>>(`/api/post/${id}`, {
+            const response = await Api.get<ApiSuccessResponse<UserResponse>>(`/api/users/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

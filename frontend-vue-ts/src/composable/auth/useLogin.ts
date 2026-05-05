@@ -12,13 +12,9 @@ interface LoginRequest {
 export const useLogin = () => {
     return useMutation<ApiSuccessResponse<UserResponse>, AxiosError<ApiErrorResponse>, LoginRequest>({
         mutationFn: async (data: LoginRequest) => {
-            try {
-                const response = await Api.post<ApiSuccessResponse<UserResponse>>("/api/login", data);
+            const response = await Api.post<ApiSuccessResponse<UserResponse>>("/api/login", data);
 
-                return response.data;
-            } catch (err) {
-                throw err;
-            }
+            return response.data;
         },
     });
 };

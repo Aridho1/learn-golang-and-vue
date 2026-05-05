@@ -15,20 +15,14 @@ interface RegisterRequest {
 export const useRegister = () => {
     return useMutation<ApiSuccessResponse<UserResponse>, AxiosError<ApiErrorResponse>, RegisterRequest>({
         mutationFn: async (data: RegisterRequest) => {
-            try {
-                // console.log("DATA:", data);
-                // console.log("JSON:", JSON.stringify(data));
+            // console.log("DATA:", data);
+            // console.log("JSON:", JSON.stringify(data));
 
-                const response = await Api.post<ApiSuccessResponse<UserResponse>>("/api/register", data);
+            const response = await Api.post<ApiSuccessResponse<UserResponse>>("/api/register", data);
 
-                // console.log("SUCCESS:", response);
+            // console.log("SUCCESS:", response);
 
-                return response.data;
-            } catch (error) {
-                // console.log("ERROR:", error);
-
-                throw error;
-            }
+            return response.data;
         },
     });
 };

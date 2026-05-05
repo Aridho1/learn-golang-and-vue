@@ -2,7 +2,6 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { ValidationErrors } from "../../types/validatioError";
 import { useLogin } from "../../composable/auth/useLogin";
 import { ApiErrorResponse, ApiSuccessResponse } from "../../types/api";
 import { UserResponse } from "../../types/user";
@@ -17,7 +16,7 @@ const form = reactive({
     password: "",
 });
 
-const errors = ref<ValidationErrors>();
+const errors = ref<Record<string, string>>();
 
 const { mutate, isPending } = useLogin();
 

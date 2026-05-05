@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useUserCreate } from "../../../composable/user/useUserCreate";
-// import { AxiosError } from "axios";
-// import { ApiErrorResponse } from "../../../types/api";
-import SidebarMenu from "../../../components/SidebarMenu.vue";
+import { reactive, ref, watchEffect } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useUserById } from "../../../composable/user/useUserById";
+import { useUserEdit } from "../../../composable/user/useUserEdit";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api";
+import SidebarMenu from "../../../components/SidebarMenu.vue";
 
+const route = useRoute();
 const router = useRouter();
+
+const id = Number(route.params.id);
 
 const form = reactive({
     name: "",
@@ -19,16 +21,29 @@ const form = reactive({
 
 const errors = ref<Record<string, string>>({});
 
-const { mutate, isPending } = useUserCreate();
+const { data: user } = useUserById(id);
 
-const storeUser = (e: Event) => {
+watchEffect(() => {
+    if (!user.value) return;
+
+    form.name = user.value.name;
+    form.username = user.value.name;
+    form.email = user.value.email;
+});
+
+const { mutate, isPending } = useUserEdit();
+
+const editUser = (e: Event) => {
     e.preventDefault();
 
     mutate(
-        { ...form },
+        { id, request: { ...form } },
         {
             onSuccess: () => {
+                // console.log("successss");
                 router.push("/admin/users");
+                // console.log("successss");
+                // router.push({ name: "/admin/users" });
             },
             onError: (err: AxiosError<ApiErrorResponse>) => {
                 errors.value = err.response?.data.errors || {};
@@ -46,14 +61,14 @@ const storeUser = (e: Event) => {
             </div>
             <div class="col-md-9">
                 <div class="card border-0 rounded-4 shadow-sm">
-                    <div class="card-header">ADD USER</div>
+                    <div class="card-header">EDIT USER</div>
                     <div class="card-body">
-                        <form @submit="storeUser">
+                        <form @submit="editUser">
                             <div class="form-group mb-3">
                                 <label class="mb-1 fw-bold">Full Name</label>
                                 <input type="text" v-model="form.name" class="form-control" placeholder="Full Name" />
-                                <div v-if="errors.name" class="alert alert-danger mt-2 rounded-4">
-                                    {{ errors.name }}
+                                <div v-if="errors.Name" class="alert alert-danger mt-2 rounded-4">
+                                    {{ errors.Name }}
                                 </div>
                             </div>
 
@@ -82,7 +97,7 @@ const storeUser = (e: Event) => {
                             </div>
 
                             <button type="submit" class="btn btn-md btn-primary rounded-4 shadow-sm border-0" :disabled="isPending">
-                                {{ isPending ? "Saving..." : "Save" }}
+                                {{ isPending ? "Updating..." : "Update" }}
                             </button>
 
                             <router-link to="/admin/users" class="btn btn-md btn-secondary rounded-4 shadow-sm border-0 ms-2">Cancel</router-link>
