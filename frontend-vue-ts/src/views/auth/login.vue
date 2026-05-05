@@ -38,7 +38,7 @@ const handleLogin = (e: Event) => {
                     "user",
                     JSON.stringify({
                         id: user.id,
-                        name: user.email,
+                        name: user.name,
                         username: user.username,
                         email: user.email,
                     }),

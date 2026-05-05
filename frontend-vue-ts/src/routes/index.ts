@@ -37,7 +37,7 @@ router.beforeEach((to, _from, next) => {
     const token = getToken();
 
     if (!token && to.matched.some((record) => record?.meta?.requiresAuth)) {
-        next({ name: "logim" });
+        next({ name: "login" });
     } else if (token && (to.name == "login" || to.name == "register")) {
         next({ name: "dashboard" });
     } else {
