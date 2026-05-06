@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"zunn/backend-api/database"
 	"zunn/backend-api/helpers"
@@ -113,17 +114,25 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var req = structs.UserUpdateRequest{}
+	var req = &structs.UserUpdateRequest{}
 
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(req); err != nil {
 		validationErrors(c, err)
 		return
 	}
 
+	fmt.Println("\nREQ: ", req)
+	// return
+
 	user.Name = req.Name
 	user.Username = req.Username
 	user.Email = req.Email
-	user.Password = helpers.HashPassword(req.Password)
+
+	if req.Password != "" {
+		user.Password = helpers.HashPassword(req.Password)
+	}
+
+	// return
 
 	if err := database.DB.Save(&user).Error; err != nil {
 		intervalServerError(c, "Failed To Update User", err)
@@ -138,8 +147,8 @@ func UpdateUser(c *gin.Context) {
 			Name: user.Name,
 			Username: user.Username,
 			Email: user.Email,
-			CreatedAt: user.CreatedAt.Format("20060-01-02 15:04:05"),
-			UpdatedAt: user.UpdatedAt.Format("20060-01-02 15:04:05"),
+			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
 		},
 	})
 }
