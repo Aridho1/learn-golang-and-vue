@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { useAuthStore } from "../composable/auth/useAuthStore";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -49,18 +50,30 @@ const router = createRouter({
     routes,
 });
 
-const getToken = () => Cookies.get("token");
+// const getToken = () => Cookies.get("token");
 
-router.beforeEach((to, _from, next) => {
-    const token = getToken();
+router.beforeEach(async (to, _from, next) => {
+    // const token = getToken();
 
-    if (!token && to.matched.some((record) => record?.meta?.requiresAuth)) {
-        next({ name: "login" });
-    } else if (token && (to.name == "login" || to.name == "register")) {
-        next({ name: "dashboard" });
-    } else {
-        next();
+    // if (!token && to.matched.some((record) => record?.meta?.requiresAuth)) {
+    //     next({ name: "login" });
+    // } else if (token && (to.name == "login" || to.name == "register")) {
+    //     next({ name: "dashboard" });
+    // } else {
+    //     next();
+    // }
+
+    const authStore = useAuthStore();
+
+    if (!authStore.user && Cookies.get("token")) {
+        await authStore.getUser();
     }
+
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        return next({ name: "login" });
+    }
+
+    next();
 });
 
 export default router;
